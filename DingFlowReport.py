@@ -16,9 +16,9 @@ class DingFlowReport:
     获取钉钉审批状态并分析出报表发送到钉钉机器人
     '''
     def __init__(self):
-        self.CorpId = "ding0cb28048be09c3aa35c2f4657eb6378f"
-        self.AppKey = "dingrr9rqihohhmkdqqr"
-        self.AppSecret = "8o_KtBrvgDObQlNmRtiTSZuxTH1XK2WTLK9BmVvGmDVPuGQ-OEYkX34acNOW2ok8"
+        self.CorpId = "dingding corpid"
+        self.AppKey = "dingding app key"
+        self.AppSecret = "dingding app secret"
 
     # 获取钉钉Token，返回Token
     def getToken(self):
