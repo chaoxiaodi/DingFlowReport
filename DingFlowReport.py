@@ -16,9 +16,9 @@ class DingFlowReport:
     获取钉钉审批状态并分析出报表发送到钉钉机器人
     '''
     def __init__(self):
-        self.CorpId = "dingding corpid"
-        self.AppKey = "dingding app key"
-        self.AppSecret = "dingding app secret"
+        self.CorpId = "i"
+        self.AppKey = "key"
+        self.AppSecret = "sec"
 
     # 获取钉钉Token，返回Token
     def getToken(self):
@@ -45,7 +45,7 @@ class DingFlowReport:
         return result.json()["result"]["list"]
 
     #根据实例出差id返回实例详情--截止到2019年年底
-    def getFlowInstance(self, dToken, process_list=[]):
+    def getFlowInstance(self, dToken, process_list):
         durl = "https://oapi.dingtalk.com/topapi/processinstance/get?access_token=%s" % (dToken)
         cc_city_list = []
         for i in process_list:
@@ -54,25 +54,25 @@ class DingFlowReport:
                 "process_instance_id": i
             }
             result = requests.post(durl, data=json.dumps(data, ensure_ascii=False))
-            cfcity = \
+            fromCity = \
             json.loads(json.loads(result.json()["process_instance"]["form_component_values"][3]["value"])[1]["value"])[
                 0]["rowValue"][2]["value"]
-            ddcity = \
+            toCity = \
             json.loads(json.loads(result.json()["process_instance"]["form_component_values"][3]["value"])[1]["value"])[
                 0]["rowValue"][3]["value"]
-            city_set = (cfcity, ddcity)
+            city_set = (fromCity, toCity)
             cc_city_list.append(city_set)
         # 返回出差城市集合列表
         return cc_city_list
 
     # 计算返回的城市列表城市数量
-    def calc_city_list(self, city_list=[]):
+    def calc_city_list(self, city_list):
         fcity_list = [y for x in city_list for y in x]
         numcity = Counter(fcity_list)
         return numcity
 
     # 地图线路测试
-    def map_line_test(self, num_city_list=[], city_list=[]):
+    def map_line_test(self, num_city_list, city_list):
         c = (
             Geo(init_opts=opts.InitOpts(theme=ThemeType.DARK, width="800px"))
             .add_schema(maptype="china")
@@ -96,14 +96,16 @@ class DingFlowReport:
         )
         return c
 
-    def testlist(self):
-        list11 = [('北京', '天津'), ('北京', '武汉'), ('北京', '北京'), ('北京', '南京'), ('北京', '武汉'), ('北京', '上海'), ('北京', '石家庄'), ('北京', '武汉'), ('北京', '武汉'), ('北京', '苏州'), ('北京', '威县'), ('北京', '天津'), ('北京', '包头')]
-        return list11
+    def testlist(self, list11):
+        #list11 = [('北京', '天津'), ('北京', '武汉'), ('北京', '北京'), ('北京', '南京'), ('北京', '武汉'), ('北京', '上海'), ('北京', '石家庄'), ('北京', '武汉'), ('北京', '武汉'), ('北京', '苏州'), ('北京', '威县'), ('北京', '天津'), ('北京', '包头')]
+        #return list11
+        #print(list11)
+        pass
 
 if __name__ == '__main__':
     w = DingFlowReport()
     dtoken = w.getToken()
-    city_list = w.testlist()
+    #city_list = w.testlist()
     process_list = w.getFlowList(dtoken)
     city_list = w.getFlowInstance(dtoken, process_list)
     num_city_list = w.calc_city_list(city_list).most_common(100)
